@@ -1,0 +1,481 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CHAT MURDER</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Glegoo' rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+    <div class="container-fluid main">
+      <div id="mainNotification"></div>
+
+      <!--SIDE BAR-->  
+
+      <div class="row"> 
+        <div class="col-md-3" id="sideBar"> 
+          <img id="logo" src="img/chatMurder.svg">
+          <div class="userProfile">
+            <img class="userPic" src="img/user_100x100.jpg">
+            <div class="userID">
+              <p id="stats"></p>
+            </div>
+            
+            <form class="accuseForm" id="accuseForm" action="">
+              <input id="accused" autocomplete="off" /><button class="accuseUser">Accuse</button>
+            </form>
+
+            <button id="murderButton"></button>
+
+            <!--BUTTONS--> 
+
+            <div class="powerUpButton powerUpContainer" id="blackOutButton">
+              <img class="buttonPic" src="img/blackout.svg">
+              <div class="powerUpBubble" id="blackOutCounter"></div>
+            </div>
+
+            <div class="powerUpButton powerUpContainer" id="lurkerButton">
+              <img class="buttonPic" id="lurkerPic" src="img/lurkers.svg">
+              <div class="powerUpBubble" id="lurkerCounter"></div>
+            </div>
+          </div>
+        </div>
+
+        <!--CHAT BOARD-->  
+
+        <div class="col-md-9" id="chatBoard">
+          <div class="row">  
+            <div id="userBar">
+              <button id="startGame" class="startGame">Start Game</button>
+              <p id="userNum"></p>
+            </div>
+          </div>
+          <div id="revolver">
+            <img src="img/revolver.svg">
+            <div id="bullet">
+              <img src="img/bullet.svg">
+            </div>
+          </div>
+          <div id="chat">
+            <ul id="messages"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!--FOOTER--> 
+
+      <div class="row" id="footer">
+          <div class="col-md-3"> 
+          </div>
+          <div class="col-md-9" id="msgInput"> 
+            <form class="msgForm" action="">
+              <input id="m" autocomplete="off" /><button>Send</button>
+            </form>
+          </div>
+      </div>
+    </div>
+
+    <!--POP OVERS-->
+    <div class="row">
+      <div class="overlay" id="usernamePop">
+        <div id="usernameErrorMessage"></div>
+        <form class="usernameForm" id="usernameForm" action="">
+          <input id="newUsername" maxlength="10" autocomplete="off" required /><button class="usrnmBtn">Change Username</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="overlay" id="rulesPop">
+        <div class="rulesTxt">
+          <h1>The Rules</h1>
+          <ol class="rules">
+            <li>At the start the murderer is picked and told the murder word</li>
+            <li>The murderer can kill other players by saying their name plus the murder word</li>
+            <li>The murderer wins by killing all the players</li>
+            <li>The players can win by correctly accusing the murderer</li>
+            <li>If a player falsely accuses someone they die</li>
+          </ol>
+          <a href="javascript:closeOverlay('rulesPop');" class="rulesButton">Got It!</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="overlay" id="cardPop">
+        <div id="blood">
+          <img src="img/blood.svg">
+        </div>
+        <div id="notification"></div>
+        <!--CARDS-->
+        <div class="cardMaster">
+          <div class="card-container" id="card1">
+            <div class="card" id="card1b">
+              <div class="front">
+                <img src="img/card.svg">
+              </div>
+              <div class="back">
+                <img src="img/card_back.svg">
+                <div class="cardType"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-container" id="card2">
+            <div class="card" id="card2b">
+              <div class="front">
+                <img src="img/card.svg">
+              </div>
+              <div class="back">
+                <img src="img/card_back.svg">
+                <div class="cardType"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-container" id="card3">
+            <div class="card" id="card3b">
+              <div class="front">
+                <img src="img/card.svg">
+              </div>
+              <div class="back">
+                <img src="img/card_back.svg">
+                <div class="cardType"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-container" id="card4">
+            <div class="card" id="card4b">
+              <div class="front">
+                <img src="img/card.svg">
+              </div>
+              <div class="back">
+                <img src="img/card_back.svg">
+                <div class="cardType"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-container" id="card5">
+            <div class="card" id="card5b">
+              <div class="front">
+                <img src="img/card.svg">
+              </div>
+              <div class="back">
+                <img src="img/card_back.svg">
+                <div class="cardType"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="overlay" id="victimPop">
+        <div id="potentialVictims"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="overlay" id="blackoutPop"></div>
+    </div>
+
+<!--SCRIPTS-->
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="js/jquery.flip.min.js"></script>
+    <script src="js/main.js"></script>
+
+<!--Need to have two script sections as one is sourcing external script and other internal-->
+  </body>
+
+    <script>
+      var snd = new Audio("audio/file.wav");
+      var socket = io();
+      var murderWord = null;
+      var nextVictim = null;
+      var username = "";
+
+// Messages
+      $('form.msgForm').submit(function(){
+        var chat = {msg:$('#m').val(), victim:nextVictim};
+        //console.log(chat);
+        socket.emit('chat message', chat);
+        $('#m').val('');
+        if(nextVictim!==null){
+          $("#m").removeClass("loaded"); 
+          nextVictim = null;
+        };
+        return false;
+      });
+      
+      socket.on('chat message', function(msg){
+        $('#messages').append($('<li><span class="chatSenderPill" id="'+msg.sender+'Pill">'+msg.sender+'</span><span class="content"> says: '+msg.content+'</span>')); 
+        $('#chat').scrollTop($('#chat')[0].scrollHeight);
+      });
+      
+      socket.on('announcement', function(msg){
+        $('#messages').append($('<li>').text(msg));
+        $('#chat').scrollTop($('#chat')[0].scrollHeight);
+      });
+
+// Forms
+      $('form.usernameForm').submit(function(){
+        socket.emit('change username', $('#newUsername').val());
+        $("#usernamePop").hide();
+        $("#usernameForm")[0].reset();
+        return false;
+      });
+
+      //Doesn't allow spaces to be typed in username form
+      $(function() {
+        $('#newUsername').on('keypress', function(key) {
+        if (key.which == 32)
+            return false;
+        });
+      });
+
+      //If username is already taken
+      socket.on('choose another username', function() {
+        console.log("choose another username")
+        $("#usernamePop").show();
+        $("#usernameErrorMessage").append($('<p>Sorry that username was taken. Please choose another username.</p>'));
+      });
+
+      // When the Accusation button is clicked
+      /*$('#messages').on("click", '.chatSenderPill', function(){
+        console.log("accused mofo is");
+        socket.emit('accusation', this.id);
+      });*/
+      $('form.accuseForm').submit(function(){
+        socket.emit('accusation', $('#accused').val());
+        $('#accused').val('');
+        $("#accuseForm").hide();
+        return false;
+      });
+
+
+// PROFILES
+      //Profile values for user
+      socket.on('profile data', function(profileValues) {
+        username = profileValues.name;
+        $("#stats").text("Username: "+profileValues.name+"\n Score: "+profileValues.score);
+      });
+
+      ///Update online user list at top of screen
+      socket.on('user update', function(users) {
+        $(".userContainer").remove();
+        console.log("User update happened");
+        $.map(users, function(value, index) {
+          console.log(value.name + " : " + value.score);
+          $('#userBar').append($('<div class="userContainer '+value.state+'User">'+ value.name +'<div class="scoreBubble">'+ value.score +'</div></div>'));
+        });
+        //If player is murderer
+        if(murderWord!==null){
+          console.log("I'm the murderer!");
+          $(".victimContainer").remove();
+          $.map(users, function(value, index) {
+            $('#potentialVictims').append($('<div class="victimContainer '+value.state+'User" id="'+value.name+'">'+ value.name +'<div class="scoreBubble">'+ value.score +'</div></div>'));
+          }); 
+          $("#"+username).remove();
+          console.log("I'm trying to remove the id with "+username);
+        }; 
+      });
+
+
+
+// GAME START
+      //Tell users they need four players 
+      socket.on('user numbers update', function(userNum) {
+        $("#userNum").text(userNum);
+        $("#userNum").show();
+      });
+
+      //Hide message about needing four players
+      socket.on('user numbers hide', function() {
+        $("#userNum").hide();
+      })
+
+      //Hide Start Game button
+      socket.on('start button hide', function() {
+        $("#startGame").hide();
+      });
+
+      //Unhide Start Game button
+      socket.on('start button unhide', function() {
+        $("#startGame").show();
+      });
+
+      //Show murder button
+      socket.on('show murder button', function(mWord) {
+        murderWord = mWord;
+        $("#murderButton").text("MURDER WORD: "+murderWord);
+        $("#murderButton").show();
+        $('#messages').append($('<li>').text("You are the murderer, press the button to use the murder word"));
+        $('#chat').scrollTop($('#chat')[0].scrollHeight);
+      });
+
+      //Hide murder button
+      socket.on('hide murder button', function() {
+        $("#murderButton").hide();
+      });
+
+      //When Murder Button is clicked
+      $("#murderButton").click(function(){
+        console.log("this is the murder word: "+murderWord);
+        $("#victimPop").show();
+      });
+
+      //When Victim is chosen
+      $('#victimPop').on("click", '.victimContainer', function(){
+        console.log("Victim has been chosen: "+this.id);
+        injectText(murderWord);
+        $("#m").addClass("loaded");
+        nextVictim = this.id;
+        $("#victimPop").hide();
+      });
+      
+      // Add murder word to chat input
+      function injectText(murderWord) {
+        var text = $('#m');
+        text.val(text.val()+' '+murderWord);
+      };
+
+      //Hide accuse button
+      socket.on('accuse form hide', function() {
+        $("#accuseForm").hide();
+      });
+
+      //Show accuse button
+      socket.on('accuse form unhide', function() {
+        $("#accuseForm").show();
+      });
+
+      // When the Start Game button is clicked
+      $("#startGame").click(function() {
+        socket.emit('start game');
+        $("#startGame").hide();
+      });
+
+      // Show Cards Popover
+      socket.on('show popover', function() {
+        $("#cardPop").show();
+        $('#notification').fadeTo(1, 1);
+        // Card is clicked
+        $(".card").on("click", function(event){
+          if(!$(event.currentTarget).hasClass("flipped")){
+            $(event.currentTarget).flip(true);
+            $(event.currentTarget).addClass("flipped");
+            socket.emit('card pick', this.id);
+            console.log("This is the ID of the card I just clicked " + this.id);
+          };
+        });
+      });
+
+// CARDS
+      // Sets up the cards as flippable
+      $(".card").flip({trigger:'manual'});
+      
+      // Tell user how many cards they can turn over
+      socket.on('how many cards', function(cardNumber){
+        $('#notification').text("Pick "+cardNumber+" cards");
+        $('#notification').fadeTo(2000, 0);
+      });
+
+      // And the card is...
+      socket.on('and the card is', function(cardSelection){
+        $('#'+cardSelection.cardID+' .cardType').text(cardSelection.card);
+      });
+
+      // No more cards
+      socket.on('card selection complete', function(){
+        $('.card').off('click'); 
+        $("#cardPop").fadeOut(2000, 0, function(){
+          $('.card').flip(false);
+          $('.card').removeClass("flipped");
+        });
+      });
+
+// BUTTONS
+      // Update Powerup Buttons
+      socket.on('powerup button update', function(buttonMap){
+        if(buttonMap.lurker>0){
+          $("#lurkerButton.powerUpContainer").css('display', 'inline-block');
+          $("#lurkerCounter").text(buttonMap.lurker);
+        } else {
+          $("#lurkerButton").hide();
+        };
+        if(buttonMap.blackout>0){
+          $("#blackOutButton.powerUpContainer").css('display', 'inline-block');
+          $("#blackOutCounter").text(buttonMap.blackout);
+        } else {
+          $("#blackOutButton").hide();
+        };
+      });
+
+      // Turn on Lurker Alert
+      socket.on('lurker alert on', function(){
+        $("#lurkerPic").addClass("lurkerAlert");
+      });
+
+      // Turn off Lurker Alert
+      socket.on('lurker alert off', function(){
+        $("#lurkerPic").removeClass("lurkerAlert");
+      });
+
+      // Lurker Button is clicked
+      $('#lurkerButton').click(function(){
+        socket.emit('death to lurkers');
+      });
+
+      // Blackout Button is clicked
+      $('#blackOutButton').click(function(){
+        socket.emit('blackout time');
+      });
+
+      // Blackout time notification recieved
+      socket.on('blackout', function(){
+        $("#blackoutPop").show();
+        setTimeout(function(){ 
+          $("#blackoutPop").fadeOut(2000, 0);
+        }, 3000);
+      });
+
+
+// POP OVERS
+
+      // SHOW POP-OVER
+      function showOverlay(divID) {
+        // SHOW THE DIV
+        document.getElementById(divID).style.display = "block";
+      }
+
+      // CLOSE POP-OVER
+      function closeOverlay(divID) {
+        // HIDE THE DIV
+        document.getElementById(divID).style.display = "none";
+      }
+
+
+      // Trigger Murder Animation
+      socket.on('death anim', function(){
+      //$("#lurkerButton").click(function() { //for checking animation
+        var gun = $("#revolver");
+        var bullet = $("#bullet");
+        gun.animate({right:'50px'}, 1200, function() {
+          snd.play();
+          bullet.animate({right:'3000px'},2000);
+          gun.animate({right:'+=0px'}, 1000, function() {
+            gun.animate({right:'-200px'}, 2000, function() {
+              $(bullet).css({right:'150px'});
+            });
+          });
+        });
+      });
+
+
+    </script>
+
+</html>

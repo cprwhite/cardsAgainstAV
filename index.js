@@ -171,7 +171,6 @@ io.on('connection', function(socket){
       console.log('username taken');
     };
   });
-    
 
   //When the Start Game button is clicked
   socket.on('start game', function(startGame){
